@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    
+    parameters {
+                string(name: "ABC", defaultValue: 'XYZ', description: 'coding')
+            }
+
+    stages {
+        stage('Test') {
+            steps {
+                sh '''
+                ls
+                date
+                pwd
+                
+                '''
+            }
+        }
+        stage('Environment variables') {
+            steps {
+                 sh  'echo  "${BUILD_ID}"'
+            }
+        } 
+        stage('continue ?') {
+            
+            input{
+                message "should we continue?"
+                ok "yes we should"
+            }
+            steps {
+                echo 'Deploy on test'
+                sh 'echo "${name}"'
+            }
+           
+        }
+        stage('Deploy on prod') {
+            steps {
+                echo 'Deploy on prod'
+            }
+        }
+    }
+}
