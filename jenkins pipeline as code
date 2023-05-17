@@ -1,53 +1,47 @@
 pipeline {
     agent any
-    
-    parameters {
-                string(name: "ABC", defaultValue: 'XYZ', description: 'coding')
-            }
-
     stages {
-        stage('Test') {
+        stage('Run a command') {
             steps {
-                sh '''
+                sh'''
                 ls
                 date
                 pwd
-                
                 '''
             }
         }
-        stage('Environment variables') {
+        stage('Build') {
             steps {
-                 sh  'echo  "${BUILD_ID}"'
+                  echo "${Build_ID}"
             }
-        } 
-        stage('continue ?') {
-            
-            input{
-                message "should we continue?"
-                ok "yes we should"
-            }
+        }
+        stage('Deploy on Test') {
             steps {
                 echo 'Deploy on test'
-                sh 'echo "${name}"'
             }
-           
+            input{ 
+                message "Should we continue?"
+                ok "yes we should"
+                }
         }
-        stage('Deploy on prod') {
+        stage('Deploy on Prod') {
             steps {
                 echo 'Deploy on prod'
             }
         }
     }
-    post { 
-        always { 
-            echo 'I will always say Hello again!'
+    post{
+        always{
+            echo 'i will run everytime'
         }
+        
         failure{
-            echo  'Failure'
+            echo 'I will run only after failure'
         }
+        
         success{
-            echo 'Success'
+            echo 'I will run after success'
         }
+    }
 }
-}
+
